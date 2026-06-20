@@ -34,14 +34,14 @@ export default function ItemsPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-ink">All Items</h1>
           <p className="text-ink-muted text-sm mt-0.5">{items.length} item{items.length !== 1 ? 's' : ''}</p>
         </div>
-        <Link href="/items/new" className="btn-primary">
+        <Link href="/items/new" className="btn-primary self-start sm:self-auto">
           <PlusCircle size={16} />
           Add Item
         </Link>
@@ -84,6 +84,7 @@ export default function ItemsPage() {
             </Link>
           </div>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-surface border-b border-surface-border">
               <tr>
@@ -131,6 +132,7 @@ export default function ItemsPage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>

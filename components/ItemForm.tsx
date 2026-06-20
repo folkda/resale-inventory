@@ -122,7 +122,7 @@ export default function ItemForm({ item }: Props) {
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto p-4 md:p-0">
       {error && (
         <div className="mb-6 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
           {error}
@@ -139,7 +139,7 @@ export default function ItemForm({ item }: Props) {
           <Field label="Description">
             <textarea className="input min-h-24 resize-y" value={form.description} onChange={e => set('description', e.target.value)} placeholder="Describe the item…" />
           </Field>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Category">
               <input className="input" value={form.category} onChange={e => set('category', e.target.value)} placeholder="e.g. Glassware, Clothing…" />
             </Field>
@@ -160,7 +160,7 @@ export default function ItemForm({ item }: Props) {
 
         {/* ── Sourcing ── */}
         <Section title="When and Where Item Was Acquired">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Where Purchased">
               <input className="input" value={form.where_purchased} onChange={e => set('where_purchased', e.target.value)} placeholder="Garage Sale, Thrift Store…" />
             </Field>
@@ -178,7 +178,7 @@ export default function ItemForm({ item }: Props) {
 
         {/* ── Pricing & Status ── */}
         <Section title="Pricing & Status">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Asking Price ($)">
               <input type="number" step="0.01" className="input" value={form.asking_price} onChange={e => set('asking_price', e.target.value)} placeholder="0.00" />
             </Field>
@@ -228,7 +228,7 @@ export default function ItemForm({ item }: Props) {
 
         {/* ── Location ── */}
         <Section title="Physical Location">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Room">
               <input className="input" value={form.room} onChange={e => set('room', e.target.value)} placeholder="Garage, Basement, Bedroom 2…" />
             </Field>
@@ -240,7 +240,7 @@ export default function ItemForm({ item }: Props) {
 
         {/* ── Measurements ── */}
         <Section title="Measurements & Shipping">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             <Field label="Length (in)">
               <input type="number" step="0.1" className="input" value={form.length_in} onChange={e => set('length_in', e.target.value)} placeholder="0.0" />
             </Field>
@@ -264,7 +264,7 @@ export default function ItemForm({ item }: Props) {
 
         {/* ── Authenticity ── */}
         <Section title="Authenticity">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Authenticity">
               <select className="input" value={form.authenticity} onChange={e => set('authenticity', e.target.value)}>
                 <option value="">Select…</option>
@@ -280,7 +280,7 @@ export default function ItemForm({ item }: Props) {
         {/* ── Photos ── */}
         {item && (
           <Section title="Photos">
-            <div className="grid grid-cols-4 gap-3 mb-3">
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-3">
               {photos.map(photo => (
                 <div key={photo.id} className="relative group rounded-lg overflow-hidden aspect-square bg-surface-border">
                   <img src={photo.url ?? ''} alt="" className="w-full h-full object-cover" />
@@ -347,7 +347,7 @@ export default function ItemForm({ item }: Props) {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="card p-6">
+    <div className="card p-4 md:p-6">
       <h2 className="font-semibold text-ink mb-4 pb-3 border-b border-surface-border">{title}</h2>
       <div className="space-y-4">{children}</div>
     </div>

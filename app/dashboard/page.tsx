@@ -22,21 +22,21 @@ export default async function DashboardPage() {
   const recent = items.slice(0, 5)
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6 md:mb-8">
         <div>
           <h1 className="text-2xl font-bold text-ink">Dashboard</h1>
           <p className="text-ink-muted text-sm mt-0.5">Your inventory at a glance</p>
         </div>
-        <Link href="/items/new" className="btn-primary">
+        <Link href="/items/new" className="btn-primary self-start sm:self-auto">
           <PlusCircle size={16} />
           Add Item
         </Link>
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
         <StatCard label="Total Items"    value={stats.total}     icon={Package}     color="blue" />
         <StatCard label="Listed"         value={stats.listed}    icon={Clock}       color="amber" />
         <StatCard label="Sold"           value={stats.sold}      icon={TrendingUp}  color="green" />
@@ -49,7 +49,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Status breakdown */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6 md:mb-8">
         <div className="card p-5">
           <h2 className="font-semibold text-ink mb-4">Status Breakdown</h2>
           <div className="space-y-3">
