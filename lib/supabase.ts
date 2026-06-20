@@ -40,9 +40,7 @@ export interface InventoryItem {
   status: ItemStatus
 
   // Where to sell
-  sell_on_ebay: boolean
-  sell_on_etsy: boolean
-  sell_local: boolean
+  item_platforms?: { platform_id: string; platforms: Platform }[]
 
   // Location
   room?: string
@@ -63,6 +61,12 @@ export interface InventoryItem {
   inventory_photos?: Photo[]
 }
 
+export interface Platform {
+  id: string
+  name: string
+  sort_order: number
+}
+
 export interface Photo {
   id: string
   item_id: string
@@ -81,7 +85,7 @@ export async function getItems(filters?: {
 }) {
   let query = supabase
     .from('inventory')
-    .select('*, inventory_photos(*)')
+    .select('*, inventory_photos(*), item_platforms(platform_id, platforms(*))')
     .order('created_at', { ascending: false })
 
   if (filters?.status) {
@@ -104,7 +108,7 @@ export async function getItems(filters?: {
 export async function getItem(id: string) {
   const { data, error } = await supabase
     .from('inventory')
-    .select('*, inventory_photos(*)')
+    .select('*, inventory_photos(*), item_platforms(platform_id, platforms(*))')
     .eq('id', id)
     .single()
   if (error) throw error
@@ -138,6 +142,47 @@ export async function deleteItem(id: string) {
     .delete()
     .eq('id', id)
   if (error) throw error
+}
+
+// ── Platforms ────────────────────────────────────────────────
+
+export async function getPlatforms() {
+  const { data, error } = await supabase
+    .from('platforms')
+    .select('*')
+    .order('sort_order', { ascending: true })
+  if (error) throw error
+  return data as Platform[]
+}
+
+export async function createPlatform(name: string, sortOrder: number) {
+  const { data, error } = await supabase
+    .from('platforms')
+    .insert({ name, sort_order: sortOrder })
+    .select()
+    .single()
+  if (error) throw error
+  return data as Platform
+}
+
+export async function deletePlatform(id: string) {
+  const { error } = await supabase.from('platforms').delete().eq('id', id)
+  if (error) throw error
+}
+
+export async function setItemPlatforms(itemId: string, platformIds: string[]) {
+  const { error: delError } = await supabase
+    .from('item_platforms')
+    .delete()
+    .eq('item_id', itemId)
+  if (delError) throw delError
+
+  if (platformIds.length === 0) return
+
+  const { error: insError } = await supabase
+    .from('item_platforms')
+    .insert(platformIds.map(platform_id => ({ item_id: itemId, platform_id })))
+  if (insError) throw insError
 }
 
 export async function uploadPhoto(itemId: string, file: File, isPrimary = false) {

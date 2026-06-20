@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   createItem, updateItem, uploadPhoto, deletePhoto,
-  type InventoryItem, type Photo,
+  getPlatforms, setItemPlatforms,
+  type InventoryItem, type Photo, type Platform,
 } from '@/lib/supabase'
 import { Upload, X, Star, Loader2 } from 'lucide-react'
 import clsx from 'clsx'
@@ -17,7 +18,6 @@ const CONDITIONS    = ['New', 'Like New', 'Good', 'Fair', 'Poor']
 const STATUSES      = ['In Storage', 'Listed', 'Pending', 'Sold']
 const AUTHENTICITIES = ['Original', 'Reproduction', 'Signed', 'Certified', 'Unknown']
 const SHIPPING_SIZES = ['Small', 'Medium', 'Large', 'Freight']
-const SOLD_PLATFORMS = ['eBay', 'Etsy', 'Local Shop', 'Other']
 
 export default function ItemForm({ item }: Props) {
   const router = useRouter()
@@ -28,6 +28,20 @@ export default function ItemForm({ item }: Props) {
 
   // Photos state
   const [photos, setPhotos] = useState<Photo[]>(item?.inventory_photos ?? [])
+
+  // Platforms
+  const [platforms, setPlatforms] = useState<Platform[]>([])
+  const [selectedPlatformIds, setSelectedPlatformIds] = useState<string[]>(
+    item?.item_platforms?.map(ip => ip.platform_id) ?? []
+  )
+
+  useEffect(() => {
+    getPlatforms().then(setPlatforms).catch(e => setError(e.message))
+  }, [])
+
+  function togglePlatform(id: string) {
+    setSelectedPlatformIds(ids => ids.includes(id) ? ids.filter(i => i !== id) : [...ids, id])
+  }
 
   // Form state
   const [form, setForm] = useState({
@@ -46,9 +60,6 @@ export default function ItemForm({ item }: Props) {
     sold_date:           item?.sold_date ?? '',
     sold_platform:       item?.sold_platform ?? '',
     status:              item?.status ?? 'In Storage',
-    sell_on_ebay:        item?.sell_on_ebay ?? false,
-    sell_on_etsy:        item?.sell_on_etsy ?? false,
-    sell_local:          item?.sell_local ?? false,
     room:                item?.room ?? '',
     bin:                 item?.bin ?? '',
     length_in:           item?.length_in?.toString() ?? '',
@@ -88,9 +99,11 @@ export default function ItemForm({ item }: Props) {
 
       if (item) {
         await updateItem(item.id, payload)
+        await setItemPlatforms(item.id, selectedPlatformIds)
         router.push(`/items/${item.id}`)
       } else {
         const created = await createItem(payload)
+        await setItemPlatforms(created.id, selectedPlatformIds)
         router.push(`/items/${created.id}`)
       }
     } catch (e: any) {
@@ -197,7 +210,8 @@ export default function ItemForm({ item }: Props) {
               <Field label="Sold Platform" className="col-span-2">
                 <select className="input" value={form.sold_platform} onChange={e => set('sold_platform', e.target.value)}>
                   <option value="">Select…</option>
-                  {SOLD_PLATFORMS.map(p => <option key={p}>{p}</option>)}
+                  {platforms.map(p => <option key={p.id} value={p.name}>{p.name}</option>)}
+                  <option value="Other">Other</option>
                 </select>
               </Field>
             </>}
@@ -206,23 +220,25 @@ export default function ItemForm({ item }: Props) {
           {/* Platforms to sell on */}
           <div>
             <label className="label">Sell On</label>
-            <div className="flex gap-4">
-              {[
-                { key: 'sell_on_ebay', label: 'eBay' },
-                { key: 'sell_on_etsy', label: 'Etsy' },
-                { key: 'sell_local',   label: 'Local Shop' },
-              ].map(({ key, label }) => (
-                <label key={key} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4 rounded accent-brand-600"
-                    checked={form[key as keyof typeof form] as boolean}
-                    onChange={e => set(key, e.target.checked)}
-                  />
-                  <span className="text-sm text-ink">{label}</span>
-                </label>
-              ))}
-            </div>
+            {platforms.length === 0 ? (
+              <p className="text-xs text-ink-light">
+                No platforms configured yet. <a href="/admin" className="text-brand-600 underline">Add some in Admin →</a>
+              </p>
+            ) : (
+              <div className="flex flex-wrap gap-4">
+                {platforms.map(p => (
+                  <label key={p.id} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 rounded accent-brand-600"
+                      checked={selectedPlatformIds.includes(p.id)}
+                      onChange={() => togglePlatform(p.id)}
+                    />
+                    <span className="text-sm text-ink">{p.name}</span>
+                  </label>
+                ))}
+              </div>
+            )}
           </div>
         </Section>
 

@@ -87,24 +87,17 @@ export default async function ItemDetailPage({ params }: { params: { id: string 
           {/* Sell on */}
           <div className="card p-5">
             <h2 className="font-semibold text-ink mb-3">Platforms</h2>
-            <div className="flex gap-3">
-              {[
-                { key: 'sell_on_ebay', label: 'eBay' },
-                { key: 'sell_on_etsy', label: 'Etsy' },
-                { key: 'sell_local',   label: 'Local Shop' },
-              ].map(({ key, label }) => (
-                <span
-                  key={key}
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    item[key as keyof typeof item]
-                      ? 'bg-brand-100 text-brand-700'
-                      : 'bg-surface text-ink-light line-through'
-                  }`}
-                >
-                  {label}
-                </span>
-              ))}
-            </div>
+            {item.item_platforms && item.item_platforms.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {item.item_platforms.map(ip => (
+                  <span key={ip.platform_id} className="px-3 py-1 rounded-full text-sm font-medium bg-brand-100 text-brand-700">
+                    {ip.platforms?.name}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-ink-muted">Not listed anywhere yet.</p>
+            )}
           </div>
 
           {/* Location */}

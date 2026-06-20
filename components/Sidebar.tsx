@@ -8,6 +8,7 @@ import {
   PlusCircle,
   Tag,
   TrendingUp,
+  Settings,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -15,6 +16,7 @@ const nav = [
   { href: '/dashboard',   label: 'Dashboard',    icon: LayoutDashboard },
   { href: '/items',       label: 'All Items',     icon: Package },
   { href: '/items/new',   label: 'Add Item',      icon: PlusCircle },
+  { href: '/admin',       label: 'Admin',         icon: Settings },
 ]
 
 export default function Sidebar() {
