@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { getItems, type InventoryItem, type ItemStatus } from '@/lib/supabase'
 import StatusBadge from '@/components/StatusBadge'
+import MarkSoldModal from '@/components/MarkSoldModal'
 import { Search, PlusCircle, Package, Filter } from 'lucide-react'
 
 const STATUSES: ItemStatus[] = ['In Storage', 'Listed', 'Pending', 'Sold']
@@ -27,6 +28,7 @@ function ItemsPageInner() {
   const [statusFilter, setStatusFilter] = useState<ItemStatus | ''>(
     initialStatus && STATUSES.includes(initialStatus) ? initialStatus : ''
   )
+  const [soldModalItem, setSoldModalItem] = useState<InventoryItem | null>(null)
 
   useEffect(() => {
     load()
@@ -137,7 +139,9 @@ function ItemsPageInner() {
                     {[item.room, item.bin].filter(Boolean).join(' / ') || '—'}
                   </td>
                   <td className="px-4 py-3">
-                    <StatusBadge status={item.status} />
+                    <button onClick={() => setSoldModalItem(item)} className="cursor-pointer">
+                      <StatusBadge status={item.status} />
+                    </button>
                   </td>
                   <td className="px-4 py-3 text-right font-mono font-medium text-ink">
                     {item.asking_price ? `$${item.asking_price.toFixed(2)}` : '—'}
@@ -149,6 +153,17 @@ function ItemsPageInner() {
           </div>
         )}
       </div>
+
+      {soldModalItem && (
+        <MarkSoldModal
+          item={soldModalItem}
+          onClose={() => setSoldModalItem(null)}
+          onSaved={updated => {
+            setItems(prev => prev.map(i => i.id === updated.id ? { ...i, ...updated } : i))
+            setSoldModalItem(null)
+          }}
+        />
+      )}
     </div>
   )
 }
