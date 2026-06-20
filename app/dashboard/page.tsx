@@ -37,9 +37,9 @@ export default async function DashboardPage() {
 
       {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
-        <StatCard label="Total Items"    value={stats.total}     icon={Package}     color="blue" />
-        <StatCard label="Listed"         value={stats.listed}    icon={Clock}       color="amber" />
-        <StatCard label="Sold"           value={stats.sold}      icon={TrendingUp}  color="green" />
+        <StatCard label="Total Items"    value={stats.total}     icon={Package}     color="blue"   href="/items" />
+        <StatCard label="Listed"         value={stats.listed}    icon={Clock}       color="amber"  href="/items?status=Listed" />
+        <StatCard label="Sold"           value={stats.sold}      icon={TrendingUp}  color="green"  href="/items?status=Sold" />
         <StatCard
           label="Revenue"
           value={`$${stats.totalSold.toFixed(2)}`}
@@ -156,12 +156,13 @@ export default async function DashboardPage() {
 }
 
 function StatCard({
-  label, value, icon: Icon, color,
+  label, value, icon: Icon, color, href,
 }: {
   label: string
   value: string | number
   icon: React.ElementType
   color: string
+  href?: string
 }) {
   const colors: Record<string, string> = {
     blue:    'bg-blue-50 text-blue-600',
@@ -169,15 +170,23 @@ function StatCard({
     green:   'bg-green-50 text-green-600',
     emerald: 'bg-emerald-50 text-emerald-600',
   }
-  return (
-    <div className="card p-5">
+  const content = (
+    <>
       <div className={`w-9 h-9 rounded-lg flex items-center justify-center mb-3 ${colors[color]}`}>
         <Icon size={18} />
       </div>
       <p className="text-2xl font-bold text-ink">{value}</p>
       <p className="text-ink-muted text-sm mt-0.5">{label}</p>
-    </div>
+    </>
   )
+  if (href) {
+    return (
+      <Link href={href} className="card p-5 block hover:ring-2 hover:ring-brand-500/30 transition-shadow">
+        {content}
+      </Link>
+    )
+  }
+  return <div className="card p-5">{content}</div>
 }
 
 function FinRow({ label, value, highlight }: { label: string; value: number; highlight?: boolean }) {

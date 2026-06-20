@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { getItems, type InventoryItem, type ItemStatus } from '@/lib/supabase'
 import StatusBadge from '@/components/StatusBadge'
 import { Search, PlusCircle, Package, Filter } from 'lucide-react'
@@ -9,10 +10,23 @@ import { Search, PlusCircle, Package, Filter } from 'lucide-react'
 const STATUSES: ItemStatus[] = ['In Storage', 'Listed', 'Pending', 'Sold']
 
 export default function ItemsPage() {
+  return (
+    <Suspense fallback={<div className="p-4 md:p-8 text-ink-muted text-sm">Loading…</div>}>
+      <ItemsPageInner />
+    </Suspense>
+  )
+}
+
+function ItemsPageInner() {
+  const searchParams = useSearchParams()
+  const initialStatus = searchParams.get('status') as ItemStatus | null
+
   const [items, setItems] = useState<InventoryItem[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
-  const [statusFilter, setStatusFilter] = useState<ItemStatus | ''>('')
+  const [statusFilter, setStatusFilter] = useState<ItemStatus | ''>(
+    initialStatus && STATUSES.includes(initialStatus) ? initialStatus : ''
+  )
 
   useEffect(() => {
     load()
