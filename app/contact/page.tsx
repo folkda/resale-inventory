@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ArrowLeft, Mail, Phone, Send } from 'lucide-react'
 
 const CONTACT_EMAIL = 'KB0RHE@yahoo.com'
-const CONTACT_PHONE = '731290653'
+const CONTACT_PHONE = '7312900653'
 
 export default function ContactPage() {
   const [name, setName] = useState('')
