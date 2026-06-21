@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Resale Inventory',
-  description: 'Track your resale inventory across eBay, Etsy, and local shops',
+  title: 'Folkgoods',
+  description: 'Curated vintage and resale goods, hand-picked and ready for a new home.',
 }
 
 export default function RootLayout({

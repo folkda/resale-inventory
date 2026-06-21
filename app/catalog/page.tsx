@@ -37,7 +37,7 @@ export default function CatalogPage() {
             New finds added regularly
           </div>
           <h1 className="text-3xl md:text-5xl font-bold text-white mb-3 tracking-tight">
-            The Shop
+            Folkgoods
           </h1>
           <p className="text-ink-light text-sm md:text-base max-w-md mx-auto mb-5">
             One-of-a-kind vintage &amp; resale finds — browse what's currently available.
