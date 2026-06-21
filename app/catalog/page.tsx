@@ -39,9 +39,15 @@ export default function CatalogPage() {
           <h1 className="text-3xl md:text-5xl font-bold text-white mb-3 tracking-tight">
             The Shop
           </h1>
-          <p className="text-ink-light text-sm md:text-base max-w-md mx-auto">
+          <p className="text-ink-light text-sm md:text-base max-w-md mx-auto mb-5">
             One-of-a-kind vintage &amp; resale finds — browse what's currently available.
           </p>
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-ink text-sm font-medium hover:bg-white/90 transition-colors"
+          >
+            Contact Us
+          </Link>
         </div>
       </header>
 
@@ -146,7 +152,11 @@ export default function CatalogPage() {
       </main>
 
       <footer className="text-center py-8 text-ink-light text-xs">
-        Interested in something? Reach out to arrange purchase.
+        Interested in something?{' '}
+        <Link href="/contact" className="text-brand-600 hover:underline font-medium">
+          Contact us
+        </Link>{' '}
+        to arrange purchase.
       </footer>
     </div>
   )

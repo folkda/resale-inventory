@@ -69,8 +69,12 @@ export default async function PublicItemPage({ params }: { params: { id: string 
             )}
 
             {item.description && (
-              <p className="text-sm text-ink-muted whitespace-pre-wrap leading-relaxed">{item.description}</p>
+              <p className="text-sm text-ink-muted whitespace-pre-wrap leading-relaxed mb-6">{item.description}</p>
             )}
+
+            <Link href="/contact" className="btn-primary inline-flex">
+              Contact About This Item
+            </Link>
           </div>
         </div>
       </main>
