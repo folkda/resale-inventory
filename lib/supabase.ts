@@ -105,6 +105,30 @@ export async function getItems(filters?: {
   return data as InventoryItem[]
 }
 
+// Public storefront — only customer-facing fields, only Listed items
+const PUBLIC_FIELDS = 'id, title, description, category, condition, asking_price, status, inventory_photos(*)'
+
+export async function getPublicItems() {
+  const { data, error } = await supabase
+    .from('inventory')
+    .select(PUBLIC_FIELDS)
+    .eq('status', 'Listed')
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return data as unknown as InventoryItem[]
+}
+
+export async function getPublicItem(id: string) {
+  const { data, error } = await supabase
+    .from('inventory')
+    .select(PUBLIC_FIELDS)
+    .eq('id', id)
+    .eq('status', 'Listed')
+    .single()
+  if (error) throw error
+  return data as unknown as InventoryItem
+}
+
 export async function getItem(id: string) {
   const { data, error } = await supabase
     .from('inventory')
