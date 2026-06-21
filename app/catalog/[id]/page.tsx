@@ -1,7 +1,7 @@
 import { getPublicItem } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { Package, ArrowLeft } from 'lucide-react'
+import { Package, ArrowLeft, Tag } from 'lucide-react'
 
 export const revalidate = 0
 
@@ -19,17 +19,17 @@ export default async function PublicItemPage({ params }: { params: { id: string 
   return (
     <div className="min-h-screen bg-surface">
       <header className="bg-ink px-4 md:px-8 py-4">
-        <div className="max-w-3xl mx-auto">
-          <Link href="/catalog" className="inline-flex items-center gap-2 text-ink-light hover:text-white text-sm">
+        <div className="max-w-4xl mx-auto">
+          <Link href="/catalog" className="inline-flex items-center gap-2 text-ink-light hover:text-white text-sm transition-colors">
             <ArrowLeft size={16} /> Back to listings
           </Link>
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto p-4 md:p-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <main className="max-w-4xl mx-auto p-4 md:p-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
           <div className="space-y-3">
-            <div className="card overflow-hidden aspect-square">
+            <div className="rounded-xl overflow-hidden aspect-square bg-white border border-surface-border shadow-sm">
               {primaryPhoto?.url ? (
                 <img src={primaryPhoto.url} alt={item.title} className="w-full h-full object-cover" />
               ) : (
@@ -41,7 +41,7 @@ export default async function PublicItemPage({ params }: { params: { id: string 
             {otherPhotos.length > 0 && (
               <div className="grid grid-cols-4 gap-2">
                 {otherPhotos.map(p => (
-                  <div key={p.id} className="aspect-square rounded-lg overflow-hidden bg-surface-border">
+                  <div key={p.id} className="aspect-square rounded-lg overflow-hidden bg-surface-border border border-surface-border">
                     <img src={p.url ?? ''} alt="" className="w-full h-full object-cover" />
                   </div>
                 ))}
@@ -50,24 +50,26 @@ export default async function PublicItemPage({ params }: { params: { id: string 
           </div>
 
           <div>
-            <h1 className="text-2xl font-bold text-ink mb-1">{item.title}</h1>
-            <p className="text-ink-muted text-sm mb-4">{item.category ?? 'Uncategorized'}</p>
+            <p className="text-ink-light text-xs font-medium uppercase tracking-wide mb-2 flex items-center gap-1">
+              <Tag size={12} />
+              {item.category ?? 'Uncategorized'}
+            </p>
+            <h1 className="text-2xl md:text-3xl font-bold text-ink mb-3 tracking-tight">{item.title}</h1>
 
             {item.asking_price && (
-              <p className="text-3xl font-bold font-mono text-brand-600 mb-4">
+              <p className="text-3xl font-bold font-mono text-brand-600 mb-5">
                 ${item.asking_price.toFixed(2)}
               </p>
             )}
 
             {item.condition && (
-              <p className="text-sm text-ink mb-4">
-                <span className="text-ink-muted">Condition: </span>
-                <span className="font-medium">{item.condition}</span>
-              </p>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-brand-50 text-brand-700 text-sm font-medium mb-5">
+                Condition: {item.condition}
+              </div>
             )}
 
             {item.description && (
-              <p className="text-sm text-ink-muted whitespace-pre-wrap">{item.description}</p>
+              <p className="text-sm text-ink-muted whitespace-pre-wrap leading-relaxed">{item.description}</p>
             )}
           </div>
         </div>
